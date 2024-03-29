@@ -35,25 +35,29 @@ with open("mkworld.cpp", "r") as file:
     lines = file.readlines()
 
 lines = [line for line in lines if "roots.push_back" not in line and "roots.back()" not in line]
-lines.insert(85, "roots.push_back(World::Root());\n")
-lines.insert(86, f'roots.back().identity = Identity("{identity}");\n')
-lines.insert(87, f'roots.back().stableEndpoints.push_back(InetAddress("{addr}"));\n')
+lines.insert(85, "\troots.push_back(World::Root());\n")
+lines.insert(86, f'\troots.back().identity = Identity("{identity}");\n')
+lines.insert(87, f'\troots.back().stableEndpoints.push_back(InetAddress("{addr}"));\n')
 
 with open("mkworld.cpp", "w") as file:
     file.writelines(lines)
 
 # 构建并移动planet
-subprocess.run(["source", "./build.sh"])
+print(subprocess.run(["pwd"]))
+subprocess.run(["bash", "./build.sh"])
 subprocess.run(["./mkworld"])
-subprocess.run(["mv", "./world.bin", "./planet"])
+subprocess.run(["cp", "./world.bin", "./planet"])
+subprocess.run(["mkdir", "-p", "../../../autosync"])
+subprocess.run(["mv", "./world.bin", "../../../autosync/planet"])
 subprocess.run(["cp", "-r", "./planet", "/var/lib/zerotier-one/"])
 subprocess.run(["cp", "-r", "./planet", "/root"])
 subprocess.run(["systemctl", "restart", "zerotier-one.service"])
 
+os.chdir("../../../")
 # 下载并安装ztncui
 ztncui_url = "https://s3-us-west-1.amazonaws.com/key-networks/deb/ztncui/1/x86_64/ztncui_0.8.14_amd64.deb"
 subprocess.run(["wget", ztncui_url])
-subprocess.run(["apt", "install", "-y", "zerotier-one.dpg"])
+subprocess.run(["apt", "install", "-y", "./ztncui_0.8.14_amd64.deb"])
 
 # 配置ztncui
 os.chdir("/opt/key-networks/ztncui/")
@@ -71,4 +75,4 @@ subprocess.run(["systemctl", "restart", "ztncui"])
 # 清理
 #subprocess.run(["rm", "-rf", "/root/ZeroTierOne"])
 print("**********安装成功*********************************************************************************")
-print("plant文件已经生成在root目录")
+print("plant文件已经生成在autosync目录")

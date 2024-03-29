@@ -6,8 +6,11 @@ import ctypes
 import platform
 import win32serviceutil
 import time
-
+# on windows
 # pip install pyinstaller
+# copy files/planet ./planet
+# copy files/WinIPBroadcast-1.6.exe ./WinIPBroadcast-1.6.exe
+# copy files/ZerotierOne.msi ./ZerotierOne.msi
 # pyinstaller --add-data "planet;." --add-data "WinIPBroadcast-1.6.exe;." --add-data "ZeroTierOne.msi;." -F .\windows_client_install.py
 try:
     def is_admin():
@@ -29,7 +32,7 @@ try:
         print('没有放置plant')
     if os.path.exists(os.path.join(file_path, "WinIPBroadcast-1.6.exe")):
 
-        NetworkID = input('需要加入的网络ID')
+        NetworkID = input('需要加入的网络ID,输入完成后按下回车\n')
         print("===============================================================================================")
         print('会弹出来安装界面，请手动点击"Next",并且完成安装!')
         print('不要修改任何的安装路径!')
@@ -54,14 +57,14 @@ try:
         time.sleep(5)
         print("===============================================================================================")
         print("重启完成,请继续等待")
-        subprocess.run([os.path.join("C:\\Program Files (x86)\\ZeroTier\\One\\zerotier-cli.bat"), "NetworkID"],
-                       check=True)
+        subprocess.run([os.path.join("C:\\Program Files (x86)\\ZeroTier\\One\\zerotier-cli.bat"), "NetworkID"], check=True)
         time.sleep(5)
         subprocess.run(
             [os.path.join("C:\\Program Files (x86)\\ZeroTier\\One\\zerotier-cli.bat"), "join", NetworkID],
             check=True)
         print("===============================================================================================")
-        print('安装完成，请按任意键关闭此窗口')
+        print('zerotier服务安装完成，请按回车，不要关闭此窗口')
+        print('将继续安装ZerotierCheck')
         input()
     else:
         print("===============================================================================================")

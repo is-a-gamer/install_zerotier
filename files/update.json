@@ -1,0 +1,5 @@
+{
+    "planet_server_ip":"填你的Planet的IP",
+    "planet_server_domain":"填写你的服务器的域名",
+    "update_planet_url":"填写你Planet更新的直链下载地址"
+}
